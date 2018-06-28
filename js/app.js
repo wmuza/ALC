@@ -15,7 +15,8 @@ $(document).ready(function (){
 | SERVICE WORKER SECTION
 |------------------------------------------
 */
-// init page and register services worker
+
+// register services worker
 if(navigator.serviceWorker){
 	// register the services worker
 	registerServiceWorker();
@@ -29,7 +30,7 @@ if(navigator.serviceWorker){
 	console.log('browser does not support Services Worker !');
 }
 
-// register sw
+// registering services worker function
 function registerServiceWorker() {
 	// register the service worker
 	navigator.serviceWorker.register('sw.js').then(function(sw) {
@@ -38,7 +39,6 @@ function registerServiceWorker() {
 
 		// on waiting state
 		if(sw.waiting){
-			// updateIsReady(sw.waiting);
 			sw.postMessage('message', {action: 'skipWaiting'});
 			return;
 		}
@@ -66,8 +66,6 @@ function trackInstalling(worker) {
 
 // update app 
 function updateIsReady(sw){
-	// console.log('a new SW is ready to take over !');
-	// sw.postMessage('message', {action: 'skipWaiting'});
 	pushUpdateFound();
 }
 
@@ -76,7 +74,6 @@ function pushUpdateFound() {
 	$(".notify").fadeIn();
   	console.log('sw found some updates.. !');
 }
-
 
 
 /*
@@ -91,7 +88,7 @@ if (!window.indexedDB) {
 // open database 
 function openDatabase(){
 	// return db instances
-	const DB_NAME 	= 'alcfx';
+	const DB_NAME 	= 'alc';
 	const database 	= indexedDB.open(DB_NAME, 1);
 
 	// on error catch errors 
@@ -113,18 +110,18 @@ function openDatabase(){
 	return database;
 }
 
-// save to currencies object
+
+// Save to Database
 function saveToDatabase(data){
-	// init database
+	// initialise database
 	const db = openDatabase();
 	
 	// on success add user
 	db.onsuccess = (event) => {
 
-		// console.log('database has been openned !');
 		const query = event.target.result;
 
-	  	// check if already exist symbol
+	  	// check if currency already exist
 		const currency = query.transaction("currencies").objectStore("currencies").get(data.symbol);
 
 		// wait for users to arrive
@@ -143,14 +140,20 @@ function saveToDatabase(data){
 	}
 }
 
-// fetch from web database
+
+// fetch from database
 function fetchFromDatabase(symbol, amount) {
-	// init database
+	// initialise database
 	const db = openDatabase();
 	
 	// on success add user
 	db.onsuccess = (event) => {
 
+		//add event listener on Convet Button
+		document.getElementById('convert-btn').addEventListener('click', ()=>{
+			$(".results").hide();
+        });
+		
 		// console.log('database has been openned !');
 		const query = event.target.result;
 
@@ -163,17 +166,12 @@ function fetchFromDatabase(symbol, amount) {
 	  		// console.log(data);
 	  		if(data == null){
 	  			$(".error_msg").append(`
-					<div class="card-feel">
+					<div class="output-results">
 		                <span class="text-danger">
-		                	You are currently offline... check internet connectivity and try again.
+		                	You are currently offline... please check your internet connectivity and try again.
 		                </span>
 					</div>
 				`);
-
-				// hide error message
-				setTimeout((e) => {
-					$(".error_msg").html("");
-				}, 1000 * 3);
 
 				// void
 				return;
@@ -184,18 +182,21 @@ function fetchFromDatabase(symbol, amount) {
 			let pairs = symbol.split('_');
 			let fr = pairs[0];
 			let to = pairs[1];
-
+			let frElement = document.getElementById('from-currency');
+			let frText = frElement.options[frElement.selectedIndex].innerHTML;
+			let toElement = document.getElementById('to-currency');
+			let toText = toElement.options[toElement.selectedIndex].innerHTML;
+			
 			$(".results").append(`
-				<div class="card-feel">
-	                <h1 class="small text-center"> <b>${amount}</b> <b>${fr}</b> & <b>${to}</b> converted successfully !</h1>
-					<hr />
-					Exchange rate for <b>${amount}</b> <b>${fr}</b> to <b>${to}</b> is: <br /> 
-					<b>${numeral(amount * data.value).format('0.000')}</b>
+				<div class="output-results">	       
+					<b>${amount} </b> <b> ${frText}</b><br> = <br><b>${(amount * val.val).toFixed(2)} ${toText}</b>
 				</div>
 			`);
 	  	}
 	}
 }
+
+
 
 /*
 |------------------------------------------
@@ -225,28 +226,30 @@ const fetchAllCurrencies = (e) => {
 	});
 }
 
+
+
 // convert currencies 
 function convertCurrency(){
 	let from 	= $("#from-currency").val();
 	let to 		= $("#to-currency").val();
 	let amount	= $("#convert-amount").val();
 
+	//add event listener on Convet Button
+	document.getElementById('convert-btn').addEventListener('click', ()=>{
+			$(".output-results").hide();
+        });
+		
 	// restrict user for converting same currency
 	if(from == to){
 		// console.log('error ');
 		$(".error_msg").html(`
-			<div class="card-feel">
+			<div class="output-results">
 				<span class="text-danger">
 					Ops!, you can't convert the same currency
 				</span>
 			</div>
-		`);
-
-		// hide error message
-		setTimeout((e) => {
-			$(".error_msg").html("");
-		}, 1000 * 3);
-
+		`);		
+				
 		// stop proccess
 		return false;
 	}
@@ -264,12 +267,14 @@ function convertCurrency(){
 
 		// iterate pairs
 		$.each(pairs, function(index, val) {
+			let frElement = document.getElementById('from-currency');
+			let frText = frElement.options[frElement.selectedIndex].innerHTML;
+			let toElement = document.getElementById('to-currency');
+			let toText = toElement.options[toElement.selectedIndex].innerHTML;
+			
 			$(".results").append(`
-				<div class="card-feel">
-                    <h1 class="small text-center"> <b>${amount}</b>  <b>${val.fr}</b> to <b>${val.to}</b> converted successfully !</h1>
-					<hr />
-					Exchange rate for <b>${amount}</b> <b>${val.fr}</b> to <b>${val.to}</b> is: <br /> 
-					<b>${numeral(amount * val.val).format('0.000')}</b>
+				<div class="output-results">	       
+					<b>${amount} </b> <b> ${frText}</b><br> = <br><b>${(amount * val.val).toFixed(2)} ${toText}</b>
 				</div>
 			`);
 
@@ -292,17 +297,9 @@ function convertCurrency(){
 }
 
 
-// array generators using map & arrow func
+// array generators using map & arrow function
 function objectToArray(objects) {
 	// body...
 	const results = Object.keys(objects).map(i => objects[i]);
 	return results;
 }
-
-// refresh page
-function refreshPage() {
-	// body...
-	window.location.reload();
-}
-=======
->>>>>>> parent of fb9527e... generators using map & arrow function
