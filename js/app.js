@@ -85,3 +85,27 @@ if (!window.indexedDB) {
     console.log("Your browser doesn't support a stable version of IndexedDB");
 }
 
+// open database 
+function openDatabase(){
+	// return db instances
+	const DB_NAME 	= 'alc';
+	const database 	= indexedDB.open(DB_NAME, 1);
+
+	// on error catch errors 
+	database.onerror = (event) => {
+		console.log('error opening web database');
+		return false;
+	};
+
+	// check db version
+	database.onupgradeneeded = function(event) {
+	  	// listen for the event response
+	  	var upgradeDB = event.target.result;
+
+	  	// create an objectStore for this database
+	  	var objectStore = upgradeDB.createObjectStore("currencies");
+	};
+
+	// return db instance
+	return database;
+}
