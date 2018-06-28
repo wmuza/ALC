@@ -139,3 +139,59 @@ function saveToDatabase(data){
 	  	}
 	}
 }
+
+
+// fetch from database
+function fetchFromDatabase(symbol, amount) {
+	// initialise database
+	const db = openDatabase();
+	
+	// on success add user
+	db.onsuccess = (event) => {
+
+		//add event listener on Convet Button
+		document.getElementById('convert-btn').addEventListener('click', ()=>{
+			$(".results").hide();
+        });
+		
+		// console.log('database has been openned !');
+		const query = event.target.result;
+
+		// check if already exist symbol
+		const currency = query.transaction("currencies").objectStore("currencies").get(symbol);
+
+		// wait for users to arrive
+	  	currency.onsuccess = (event) => {
+	  		const data = event.target.result;
+	  		// console.log(data);
+	  		if(data == null){
+	  			$(".error_msg").append(`
+					<div class="output-results">
+		                <span class="text-danger">
+		                	You are currently offline... please check your internet connectivity and try again.
+		                </span>
+					</div>
+				`);
+
+				// void
+				return;
+	  		}
+
+			// console.log(data);
+			// console.log(data);
+			let pairs = symbol.split('_');
+			let fr = pairs[0];
+			let to = pairs[1];
+			let frElement = document.getElementById('from-currency');
+			let frText = frElement.options[frElement.selectedIndex].innerHTML;
+			let toElement = document.getElementById('to-currency');
+			let toText = toElement.options[toElement.selectedIndex].innerHTML;
+			
+			$(".results").append(`
+				<div class="output-results">	       
+					<b>${amount} </b> <b> ${frText}</b><br> = <br><b>${(amount * val.val).toFixed(2)} ${toText}</b>
+				</div>
+			`);
+	  	}
+	}
+}
