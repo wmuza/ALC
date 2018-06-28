@@ -290,6 +290,7 @@ function convertCurrency(){
 	// void form
 	return false;
 }
+<<<<<<< HEAD
 
 // array generators using map & arrow func
 function objectToArray(objects) {
@@ -303,3 +304,5 @@ function refreshPage() {
 	// body...
 	window.location.reload();
 }
+=======
+>>>>>>> parent of fb9527e... generators using map & arrow function
