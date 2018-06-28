@@ -74,3 +74,14 @@ function pushUpdateFound() {
 	$(".notify").fadeIn();
   	console.log('sw found some updates.. !');
 }
+
+
+/*
+|------------------------------------------
+| INDEXED DB SECTION
+|------------------------------------------
+*/
+if (!window.indexedDB) {
+    console.log("Your browser doesn't support a stable version of IndexedDB");
+}
+
