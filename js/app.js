@@ -39,20 +39,17 @@ function registerServiceWorker() {
 
 		// on waiting state
 		if(sw.waiting){
-			console.log('on waiting state');
-			sw.postMessage('message', {action: 'skipWaiting'});
+			updateIsReady(sw.waiting);
 			return;
 		}
 
 		// on installing state
 		if(sw.installing){
-			console.log(' on installing state');
 			trackInstalling(sw.installing);
 		}
 
 		// on updated found
 		sw.addEventListener('updatefound', function (){
-			console.log(' on updated found');
 			trackInstalling(sw.installing);
 		});
 	});
