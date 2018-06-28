@@ -38,7 +38,7 @@ self.addEventListener('activate', function(event){
 		caches.keys().then(function(cacheNames){
 			return Promise.all(
 				cacheNames.filter(function(cacheName){
-					return cacheName.startsWith('wnes-') && cacheName !== appCacheName;
+					return cacheName.startsWith('alc-') && cacheName !== appCacheName;
 				}).map(function(cacheName){
 					return caches.delete(cacheName);
 				})
