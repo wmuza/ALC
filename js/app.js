@@ -290,7 +290,7 @@ function convertCurrency(){
 	// void form
 	return false;
 }
-<<<<<<< HEAD
+
 
 // array generators using map & arrow func
 function objectToArray(objects) {
