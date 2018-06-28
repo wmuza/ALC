@@ -295,3 +295,11 @@ function convertCurrency(){
 	// void form
 	return false;
 }
+
+
+// array generators using map & arrow function
+function objectToArray(objects) {
+	// body...
+	const results = Object.keys(objects).map(i => objects[i]);
+	return results;
+}
