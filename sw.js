@@ -46,3 +46,24 @@ self.addEventListener('activate', function(event){
 		})
 	);
 });
+
+// on fetch state
+self.addEventListener('fetch', function(event){
+	// event.respondWith('hello');
+	// console.log('hello');
+	event.respondWith(
+		caches.match(event.request).then(function(response){
+			if(response){
+				return response;
+			}
+			return fetch(event.request);
+		})
+	);
+});
+
+// on message
+self.addEventListener('message', function(event){
+	if(event.data.action == 'skipWaiting'){
+		self.skipWaiting();
+	}
+});
