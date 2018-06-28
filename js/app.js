@@ -33,7 +33,7 @@ if(navigator.serviceWorker){
 // registering services worker function
 function registerServiceWorker() {
 	// register the service worker
-	navigator.serviceWorker.register('/sw.js').then(function(sw) {
+	navigator.serviceWorker.register('/ALC/sw.js').then(function(sw) {
 		// check service worker controller
 		if(!navigator.serviceWorker.controller) return;
 
