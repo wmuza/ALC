@@ -225,3 +225,73 @@ const fetchAllCurrencies = (e) => {
 		}
 	});
 }
+
+
+
+// convert currencies 
+function convertCurrency(){
+	let from 	= $("#from-currency").val();
+	let to 		= $("#to-currency").val();
+	let amount	= $("#convert-amount").val();
+
+	//add event listener on Convet Button
+	document.getElementById('convert-btn').addEventListener('click', ()=>{
+			$(".output-results").hide();
+        });
+		
+	// restrict user for converting same currency
+	if(from == to){
+		// console.log('error ');
+		$(".error_msg").html(`
+			<div class="output-results">
+				<span class="text-danger">
+					Ops!, you can't convert the same currency
+				</span>
+			</div>
+		`);		
+				
+		// stop proccess
+		return false;
+	}
+
+	// build query 
+	let body  = `${from}_${to}`;
+	let query = {
+		q: body
+	};
+
+	// convert currencies
+	$.get('https://free.currencyconverterapi.com/api/v5/convert', query, (data) => {
+		// convert to array
+		const pairs = objectToArray(data.results);
+
+		// iterate pairs
+		$.each(pairs, function(index, val) {
+			let frElement = document.getElementById('from-currency');
+			let frText = frElement.options[frElement.selectedIndex].innerHTML;
+			let toElement = document.getElementById('to-currency');
+			let toText = toElement.options[toElement.selectedIndex].innerHTML;
+			
+			$(".results").append(`
+				<div class="output-results">	       
+					<b>${amount} </b> <b> ${frText}</b><br> = <br><b>${(amount * val.val).toFixed(2)} ${toText}</b>
+				</div>
+			`);
+
+			// save object results for later use
+			let object = {
+				symbol: body,
+				value: val.val
+			};
+
+			// save to database
+			saveToDatabase(object);
+		});
+	}).fail((err) => {
+		// check currencies from indexedDB
+		fetchFromDatabase(body, amount);
+	});
+
+	// void form
+	return false;
+}
