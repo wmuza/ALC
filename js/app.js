@@ -195,3 +195,33 @@ function fetchFromDatabase(symbol, amount) {
 	  	}
 	}
 }
+
+
+
+/*
+|------------------------------------------
+| API SECTION
+|------------------------------------------
+*/
+// fetch all currencies 
+const fetchAllCurrencies = (e) => {
+	// used es6 Arrow func here..
+	$.get('https://free.currencyconverterapi.com/api/v5/currencies', (data) => {
+		// if data not fetch
+		if(!data) console.log("Could not fetch any data");
+		
+		// convert pairs to array
+		const pairs = objectToArray(data.results);
+
+		// used for of loop
+		for(let val of pairs){
+			// using template leteral
+			$("#from-currency").append(`
+				<option value="${val.id}">${val.id} (${val.currencyName})</option>
+			`);
+			$("#to-currency").append(`
+				<option value="${val.id}">${val.id} (${val.currencyName})</option>
+			`);
+		}
+	});
+}
