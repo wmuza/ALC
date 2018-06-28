@@ -54,3 +54,23 @@ function registerServiceWorker() {
 		});
 	});
 }
+
+// track sw state
+function trackInstalling(worker) {
+	worker.addEventListener('statechange', function(){
+		if(worker.state == 'installed'){
+			updateIsReady(worker);
+		}
+	});
+}
+
+// update app 
+function updateIsReady(sw){
+	pushUpdateFound();
+}
+
+// push updates
+function pushUpdateFound() {
+	$(".notify").fadeIn();
+  	console.log('sw found some updates.. !');
+}
