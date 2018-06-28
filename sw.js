@@ -6,7 +6,7 @@
 */
 
 // registering service worker cache 
-var appCacheName = 'alc-static-v1';
+var appCacheName = 'alcwm-static-v1';
 var appCacheAssets = [
 	  'https://wmuza.github.io/ALC/',
 	  'https://wmuza.github.io/ALC/index.html',
@@ -38,7 +38,7 @@ self.addEventListener('activate', function(event){
 		caches.keys().then(function(cacheNames){
 			return Promise.all(
 				cacheNames.filter(function(cacheName){
-					return cacheName.startsWith('alc-') && cacheName !== appCacheName;
+					return cacheName.startsWith('alcwm-') && cacheName !== appCacheName;
 				}).map(function(cacheName){
 					return caches.delete(cacheName);
 				})
