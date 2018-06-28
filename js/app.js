@@ -109,3 +109,33 @@ function openDatabase(){
 	// return db instance
 	return database;
 }
+
+
+// Save to Database
+function saveToDatabase(data){
+	// initialise database
+	const db = openDatabase();
+	
+	// on success add user
+	db.onsuccess = (event) => {
+
+		const query = event.target.result;
+
+	  	// check if currency already exist
+		const currency = query.transaction("currencies").objectStore("currencies").get(data.symbol);
+
+		// wait for users to arrive
+	  	currency.onsuccess = (event) => {
+	  		const dbData = event.target.result;
+	  		const store  = query.transaction("currencies", "readwrite").objectStore("currencies");
+
+	  		if(!dbData){ 
+	  			// save data into currency object
+				store.add(data, data.symbol);
+	  		}else{
+	  			// update data existing currency object
+				store.put(data, data.symbol);
+	  		};
+	  	}
+	}
+}
