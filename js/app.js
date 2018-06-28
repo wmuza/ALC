@@ -88,7 +88,7 @@ if (!window.indexedDB) {
 // open database 
 function openDatabase(){
 	// return db instances
-	const DB_NAME 	= 'alc';
+	const DB_NAME 	= 'ALC';
 	const database 	= indexedDB.open(DB_NAME, 1);
 
 	// on error catch errors 
