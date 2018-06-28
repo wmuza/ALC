@@ -6,8 +6,9 @@
 */
 
 // registering service worker cache 
-var appCacheName = 'currency-converter--static-v12';
-var urlsToCache = [
+const staticCacheName = 'currency-converter-static-v1';
+const urlsToCache = [
+	  '/',
 	  '/index.html',
 	  '/css/app.css',
 	  '/js/app.js',
@@ -19,33 +20,29 @@ var urlsToCache = [
 	  'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
 	  'https://free.currencyconverterapi.com/api/v5/currencies',
 	  'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css',	 
-	  'https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js'
-];
+	  'https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js',
+]
 
-
-// on install state
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(appCacheName)
+    caches.open(staticCacheName)
       .then((cache) => cache.addAll(urlsToCache))
   )
 });
 
-// on activate state
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.filter((cacheName) => {
           return cacheName.startsWith('currency-converter-') &&
-            cacheName !== appCacheName;
+            cacheName !== staticCacheName;
         }).map(cacheName => caches.delete(cacheName))
       );
     })
   );
-})
+});
 
-// on fetch state
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
@@ -74,9 +71,8 @@ self.addEventListener('fetch', (event) => {
   )
 });
 
-// on message
-self.addEventListener('message', function(event){
-	if(event.data.action == 'skipWaiting'){
-		self.skipWaiting();
-	}
+self.addEventListener('message', (event) => {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
