@@ -189,7 +189,7 @@ function fetchFromDatabase(symbol, amount) {
 			
 			$(".results").append(`
 				<div class="output-results">	       
-					<b>${amount} </b> <b> ${frText}</b><br> = <br><b>${(amount * val.val).toFixed(2)} ${toText}</b>
+					<b>${amount} </b> <b> ${frText}</b><br> = <br><b>${(amount * data.val).toFixed(2)} ${toText}</b>
 				</div>
 			`);
 	  	}
@@ -289,7 +289,6 @@ function convertCurrency(){
 		});
 	}).fail((err) => {
 		// check currencies from indexedDB
-		console.log('check currencies from indexedDB');
 		fetchFromDatabase(body, amount);
 	});
 
