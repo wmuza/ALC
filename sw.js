@@ -31,3 +31,18 @@ self.addEventListener('install', function(event){
 		})
 	);
 });
+
+// on activate state
+self.addEventListener('activate', function(event){
+	event.waitUntil(
+		caches.keys().then(function(cacheNames){
+			return Promise.all(
+				cacheNames.filter(function(cacheName){
+					return cacheName.startsWith('wnes-') && cacheName !== appCacheName;
+				}).map(function(cacheName){
+					return caches.delete(cacheName);
+				})
+			);
+		})
+	);
+});
