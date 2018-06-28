@@ -6,7 +6,7 @@
 */
 
 // registering service worker cache 
-var appCacheName = 'alcwm-static-v1';
+var appCacheName = 'alc-static-v1';
 var appCacheAssets = [
 	  'https://wmuza.github.io/ALC/',
 	  'https://wmuza.github.io/ALC/index.html',
@@ -19,8 +19,9 @@ var appCacheAssets = [
 	  'https://wmuza.github.io/ALC/fonts/montserrat/Montserrat-Bold.ttf',
 	  'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
 	  'https://free.currencyconverterapi.com/api/v5/currencies',
+	  'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js',
 	  'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css',	 
-	  'https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js',
+	  'https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js'
 ];
 
 // on install state
@@ -38,7 +39,7 @@ self.addEventListener('activate', function(event){
 		caches.keys().then(function(cacheNames){
 			return Promise.all(
 				cacheNames.filter(function(cacheName){
-					return cacheName.startsWith('alcwm-') && cacheName !== appCacheName;
+					return cacheName.startsWith('wnes-') && cacheName !== appCacheName;
 				}).map(function(cacheName){
 					return caches.delete(cacheName);
 				})
