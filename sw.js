@@ -13,7 +13,7 @@ var appCacheAssets = [
 	  'https://wmuza.github.io/ALC/css/app.css',
 	  'https://wmuza.github.io/ALC/js/app.js',
 	  'https://wmuza.github.io/ALC/img/icon.png',
-	  'https://wmuza.github.io/ALC/img/background-image.png',
+	  'https://wmuza.github.io/ALC/img/background-image.jpg',
 	  'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
 	  'https://free.currencyconverterapi.com/api/v5/currencies',
 	  'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css',	 
