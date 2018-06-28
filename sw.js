@@ -6,17 +6,17 @@
 */
 
 // registering service worker cache 
-var appCacheName = 'wnes-static-v1';
+var appCacheName = 'wnes-static-v2';
 var appCacheAssets = [
-	  'https://wmuza.github.io/ALC/',
-	  'https://wmuza.github.io/ALC/index.html',
-	  'https://wmuza.github.io/ALC/css/app.css',
-	  'https://wmuza.github.io/ALC/js/app.js',
-	  'https://wmuza.github.io/ALC/img/icon.png',
-	  'https://wmuza.github.io/ALC/img/background-image.png',
-	  'https://wmuza.github.io/ALC/fonts/montserrat/Montserrat-Regular.ttf',
-	  'https://wmuza.github.io/ALC/fonts/montserrat/Montserrat-ExtraBold.ttf',
-	  'https://wmuza.github.io/ALC/fonts/montserrat/Montserrat-Bold.ttf',
+	  '/',
+	  '/index.html',
+	  '/css/app.css',
+	  '/js/app.js',
+	  '/img/icon.png',
+	  '/img/background-image.png',
+	  '/fonts/montserrat/Montserrat-Regular.ttf',
+	  '/fonts/montserrat/Montserrat-ExtraBold.ttf',
+	  '/fonts/montserrat/Montserrat-Bold.ttf',
 	  'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
 	  'https://free.currencyconverterapi.com/api/v5/currencies',
 	  'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css',	 
