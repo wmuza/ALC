@@ -10,11 +10,14 @@ This app allows converting currencies in both offline and online mode and its fa
 
 
 ### Prerequisites:
+  
+  Service workers [service-workers](https://developers.google.com/web/fundamentals/primers/service-workers/)
 
-Progressive Web Application  [PWA](https://developers.google.com/web/progressive-web-apps/).
-Service workers [service-workers(https://developers.google.com/web/fundamentals/primers/service-workers/)
-IndexedDB [indexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
-Free Currency Converter API [Freecurrencyconverterapi](https://www.currencyconverterapi.com/)
+  Free Currency Converter API [Freecurrencyconverterapi](https://www.currencyconverterapi.com/)
+
+  IndexedDB  [indexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
+  
+  Progressive Web Application  [PWA](https://developers.google.com/web/progressive-web-apps/)
 
 Building the progressive web application requires all above listed items to provide a dynamic and massively improve the user experience to an Offline first Application.
 
