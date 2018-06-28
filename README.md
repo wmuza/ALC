@@ -23,7 +23,7 @@ Building the progressive web application requires all above listed items to prov
 
 ### Github page
 
-This application is hosted on using Github page [visit here]().
+This application is hosted on using Github page [visit here](https://wmuza.github.io/ALC/).
 
 ### Support or Contact
 
