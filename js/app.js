@@ -33,23 +33,26 @@ if(navigator.serviceWorker){
 // registering services worker function
 function registerServiceWorker() {
 	// register the service worker
-	navigator.serviceWorker.register('sw.js').then(function(sw) {
+	navigator.serviceWorker.register('/sw.js').then(function(sw) {
 		// check service worker controller
 		if(!navigator.serviceWorker.controller) return;
 
 		// on waiting state
 		if(sw.waiting){
+			console.log('on waiting state');
 			sw.postMessage('message', {action: 'skipWaiting'});
 			return;
 		}
 
 		// on installing state
 		if(sw.installing){
+			console.log(' on installing state');
 			trackInstalling(sw.installing);
 		}
 
 		// on updated found
 		sw.addEventListener('updatefound', function (){
+			console.log(' on updated found');
 			trackInstalling(sw.installing);
 		});
 	});
