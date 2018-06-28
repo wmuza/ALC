@@ -289,7 +289,7 @@ function convertCurrency(){
 		});
 	}).fail((err) => {
 		// check currencies from indexedDB
-		console.log(check currencies from indexedDB);
+		console.log('check currencies from indexedDB');
 		fetchFromDatabase(body, amount);
 	});
 
