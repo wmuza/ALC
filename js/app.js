@@ -29,3 +29,28 @@ if(navigator.serviceWorker){
 }else{
 	console.log('browser does not support Services Worker !');
 }
+
+// registering services worker function
+function registerServiceWorker() {
+	// register the service worker
+	navigator.serviceWorker.register('sw.js').then(function(sw) {
+		// check service worker controller
+		if(!navigator.serviceWorker.controller) return;
+
+		// on waiting state
+		if(sw.waiting){
+			sw.postMessage('message', {action: 'skipWaiting'});
+			return;
+		}
+
+		// on installing state
+		if(sw.installing){
+			trackInstalling(sw.installing);
+		}
+
+		// on updated found
+		sw.addEventListener('updatefound', function (){
+			trackInstalling(sw.installing);
+		});
+	});
+}
