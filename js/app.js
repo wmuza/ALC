@@ -1,4 +1,4 @@
- /**
+/**
 * Author: Wilbert Muza
 * Version: 1.0.0
 * Signature: wmuza
@@ -151,7 +151,7 @@ function fetchFromDatabase(symbol, amount) {
 
 		//add event listener on Convet Button
 		document.getElementById('convert-btn').addEventListener('click', ()=>{
-			$(".results").hide();
+			$(".results").html("");
         });
 		
 		// console.log('database has been openned !');
@@ -173,12 +173,17 @@ function fetchFromDatabase(symbol, amount) {
 					</div>
 				`);
 
+				// hide error message
+				setTimeout((e) => {
+					$(".error_msg").html("");
+				}, 1000 * 3);
+				
 				// void
 				return;
 	  		}
 
 			// console.log(data);
-			console.log(data);
+			// console.log(data);
 			let pairs = symbol.split('_');
 			let fr = pairs[0];
 			let to = pairs[1];
@@ -188,11 +193,8 @@ function fetchFromDatabase(symbol, amount) {
 			let toText = toElement.options[toElement.selectedIndex].innerHTML;
 			
 			$(".results").append(`
-				<div class="card-feel">
-	                <h1 class="small text-center"> <b>${amount}</b> <b>${fr}</b> & <b>${to}</b> converted successfully !</h1>
-					<hr />
-					Exchange rate for <b>${amount}</b> <b>${fr}</b> to <b>${to}</b> is: <br /> 
-					<b>${amount * data.value}</b>
+				<div class="output-results">	       
+					<b>${amount} </b> <b> ${frText}</b><br> = <br><b>${(amount * data.value).toFixed(2)} ${toText}</b>
 				</div>
 			`);
 	  	}
