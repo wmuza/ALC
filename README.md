@@ -6,6 +6,7 @@
 ### Github page ###
 
 This application is hosted on using Github page [visit here](https://wmuza.github.io/ALC/).
+![picture alt](https://wmuza.github.io/ALC/img/Currency%20Converter.PNG "Currency Converter")
 
 ### Mobile Web Specialist Track ###
 
