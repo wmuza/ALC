@@ -6,8 +6,8 @@
 
 'use strict';
 
-$(document).ready(function (){
-	fetchAllCurrencies();
+$(document).ready( () => { 
+	let registerServiceWorker = new MainController();	
 });
 
 /*
@@ -16,63 +16,74 @@ $(document).ready(function (){
 |------------------------------------------
 */
 
-// register services worker
-if(navigator.serviceWorker){
-	// register the services worker
-	registerServiceWorker();
+// A base class is defined using the new reserved 'class' keyword
+class MainController {
+  
+  // constructor
+  constructor () {
+	// registering services worker
+    if (!navigator.serviceWorker) return;
+    navigator.serviceWorker.register('/ALC/sw.js').then( sw => {
+	  
+	  // Notify on the console
+      console.log('ServiceWorker successful with scope: ', sw.scope);
+      
+	  // check service worker controller
+	  if (!navigator.serviceWorker.controller) {
+        return;
+      }
 
-	// listen for controller change
-	navigator.serviceWorker.addEventListener('controllerchange', function (){
-		window.location.reload();
-	});
+	  // Check if on waiting state
+      if (sw.waiting) {
+        MainController.updateReady(sw.waiting);
+        return;
+      }
 
-}else{
-	console.log('browser does not support Services Worker !');
-}
+	  // Check if on installing state
+      if (sw.installing) {
+        MainController.trackInstalling(sw.installing);
+        return;
+      }
 
-// registering services worker function
-function registerServiceWorker() {
-	// register the service worker
-	navigator.serviceWorker.register('/ALC/sw.js').then(function(sw) {
-		// check service worker controller
-		if(!navigator.serviceWorker.controller) return;
+	  // Add Event Listener on updatefound
+      sw.addEventListener('updatefound', () => {
+        MainController.trackInstalling(sw.installing);
+      });
 
-		// on waiting state
-		if(sw.waiting){
-			updateIsReady(sw.waiting);
-			return;
-		}
+      // Refreshing
+	  let refresh;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refresh) return;
+        window.location.reload();
+        refresh = true;
+      });
+    });
+	
+	//Fetch all currencies
+	fetchAllCurrencies();
+  }
 
-		// on installing state
-		if(sw.installing){
-			trackInstalling(sw.installing);
-		}
+  static trackInstalling(worker) {
+    worker.addEventListener('statechange', () => {
+      if (worker.state === 'installed') {
+        MainController.updateReady(worker);
+      }
+    });
+  }
 
-		// on updated found
-		sw.addEventListener('updatefound', function (){
-			trackInstalling(sw.installing);
-		});
-	});
-}
+  static updateReady(worker) {
+    MainController.showAlert('New version available');
 
-// track sw state
-function trackInstalling(worker) {
-	worker.addEventListener('statechange', function(){
-		if(worker.state == 'installed'){
-			updateIsReady(worker);
-		}
-	});
-}
+	$("#refresh").click( () => worker.postMessage({ action: 'skipWaiting' }) );
+	$("#dismiss").click( () => $("#alert").hide() );
+  }
 
-// update app 
-function updateIsReady(sw){
-	pushUpdateFound();
-}
-
-// push updates
-function pushUpdateFound() {
-	$(".notify").fadeIn();
-  	console.log('sw found some updates.. !');
+  // update-only notification alert
+  static showAlert(message) {
+	$("#alert").show();
+    $("#alert-message").innerHTML(message);
+	console.log(message);
+  }
 }
 
 
@@ -86,24 +97,24 @@ if (!window.indexedDB) {
 }
 
 // open database 
-function openDatabase(){
+const openDatabase = () => {
 	// return db instances
 	const DB_NAME 	= 'alc';
 	const database 	= indexedDB.open(DB_NAME, 1);
 
 	// on error catch errors 
-	database.onerror = (event) => {
+	database.onerror = event => {
 		console.log('error opening web database');
 		return false;
 	};
 
 	// check db version
-	database.onupgradeneeded = function(event) {
+	database.onupgradeneeded = event => {
 	  	// listen for the event response
-	  	var upgradeDB = event.target.result;
+	  	let upgradeDB = event.target.result;
 
 	  	// create an objectStore for this database
-	  	var objectStore = upgradeDB.createObjectStore("currencies");
+	  	let objectStore = upgradeDB.createObjectStore("currencies");
 	};
 
 	// return db instance
@@ -112,12 +123,12 @@ function openDatabase(){
 
 
 // Save to Database
-function saveToDatabase(data){
+const saveToDatabase = data => {
 	// initialise database
 	const db = openDatabase();
 	
 	// on success add user
-	db.onsuccess = (event) => {
+	db.onsuccess = event => {
 
 		const query = event.target.result;
 
@@ -125,7 +136,7 @@ function saveToDatabase(data){
 		const currency = query.transaction("currencies").objectStore("currencies").get(data.symbol);
 
 		// wait for users to arrive
-	  	currency.onsuccess = (event) => {
+	  	currency.onsuccess = event => {
 	  		const dbData = event.target.result;
 	  		const store  = query.transaction("currencies", "readwrite").objectStore("currencies");
 
@@ -142,28 +153,28 @@ function saveToDatabase(data){
 
 
 // fetch from database
-function fetchFromDatabase(symbol, amount) {
+const fetchFromDatabase = (symbol, amount) => {
 	// initialise database
 	const db = openDatabase();
 	
 	// on success add user
-	db.onsuccess = (event) => {
+	db.onsuccess = event => {
 
 		//add event listener on Convet Button
-		document.getElementById('convert-btn').addEventListener('click', ()=>{
+		document.getElementById('convert-btn').addEventListener('click', () => {
 			$(".results").html("");
         });
 		
-		// console.log('database has been openned !');
 		const query = event.target.result;
 
 		// check if already exist symbol
 		const currency = query.transaction("currencies").objectStore("currencies").get(symbol);
 
 		// wait for users to arrive
-	  	currency.onsuccess = (event) => {
+	  	currency.onsuccess =  event => {
 	  		const data = event.target.result;
-	  		// console.log(data);
+			
+	  		// Check if currency exist in IndexDB
 	  		if(data == null){
 	  			$(".error_msg").append(`
 					<div class="output-results">
@@ -174,22 +185,16 @@ function fetchFromDatabase(symbol, amount) {
 				`);
 
 				// hide error message
-				setTimeout((e) => {
-					$(".error_msg").html("");
-				}, 1000 * 3);
+				setTimeout( e => $(".error_msg").html(""), 3000);
 				
-				// void
+				// return void
 				return;
 	  		}
 
-			// console.log(data);
-			// console.log(data);
-			let pairs = symbol.split('_');
-			let fr = pairs[0];
-			let to = pairs[1];
+			// Getting Symbols;
 			let frElement = document.getElementById('from-currency');
-			let frText = frElement.options[frElement.selectedIndex].innerHTML;
 			let toElement = document.getElementById('to-currency');
+			let frText = frElement.options[frElement.selectedIndex].innerHTML;			
 			let toText = toElement.options[toElement.selectedIndex].innerHTML;
 			
 			$(".results").append(`
@@ -208,18 +213,18 @@ function fetchFromDatabase(symbol, amount) {
 | API SECTION
 |------------------------------------------
 */
-// fetch all currencies 
-const fetchAllCurrencies = (e) => {
-	// used es6 Arrow func here..
-	$.get('https://free.currencyconverterapi.com/api/v5/currencies', (data) => {
+// fetch all currencies from the API
+const fetchAllCurrencies = e => {
+	// Getting all currrencies from the url here
+	$.get('https://free.currencyconverterapi.com/api/v5/currencies', data => {
 		// if data not fetch
 		if(!data) console.log("Could not fetch any data");
 		
-		// convert pairs to array
-		const pairs = objectToArray(data.results);
+		// convert data results into an array
+		const resultdata = objectToArray(data.results);
 
 		// used for of loop
-		for(let val of pairs){
+		for(let val of resultdata){
 			// using template leteral
 			$("#from-currency").append(`
 				<option value="${val.id}">${val.id} (${val.currencyName})</option>
@@ -228,25 +233,25 @@ const fetchAllCurrencies = (e) => {
 				<option value="${val.id}">${val.id} (${val.currencyName})</option>
 			`);
 		}
-	});
+	})
+	.fail( () => console.log( "Could not fetch any currencies Data" ) );
 }
 
 
 
 // convert currencies 
-function convertCurrency(){
-	let from 	= $("#from-currency").val();
-	let to 		= $("#to-currency").val();
+const convertCurrency = () => {
+	let fromCurrency 	= $("#from-currency").val();
+	let toCurrency 		= $("#to-currency").val();
 	let amount	= $("#convert-amount").val();
 
-	//add event listener on Convet Button
-	document.getElementById('convert-btn').addEventListener('click', ()=>{
-			$(".output-results").hide();
-        });
+	//Remove Previous Results 
+	document.getElementById('convert-btn').addEventListener('click', () => {
+			$(".output-results").html('');
+    });
 		
 	// restrict user for converting same currency
-	if(from == to){
-		// console.log('error ');
+	if(fromCurrency == toCurrency){
 		$(".error_msg").html(`
 			<div class="output-results">
 				<span class="text-danger">
@@ -260,23 +265,22 @@ function convertCurrency(){
 	}
 
 	// build query 
-	let body  = `${from}_${to}`;
+	let body  = `${fromCurrency}_${toCurrency}`;
 	let query = {
 		q: body
 	};
 
 	// convert currencies
-	$.get('https://free.currencyconverterapi.com/api/v5/convert', query, (data) => {
+	$.get('https://free.currencyconverterapi.com/api/v5/convert', query, data => {
 		// convert to array
 		const pairs = objectToArray(data.results);
+		let frElement = document.getElementById('from-currency');
+		let toElement = document.getElementById('to-currency');
+		let frText = frElement.options[frElement.selectedIndex].innerHTML;
+		let toText = toElement.options[toElement.selectedIndex].innerHTML;
 
 		// iterate pairs
-		$.each(pairs, function(index, val) {
-			let frElement = document.getElementById('from-currency');
-			let frText = frElement.options[frElement.selectedIndex].innerHTML;
-			let toElement = document.getElementById('to-currency');
-			let toText = toElement.options[toElement.selectedIndex].innerHTML;
-			
+		$.each(pairs, (index, val) => {
 			$(".results").append(`
 				<div class="output-results">	       
 					<b>${amount} </b> <b> ${frText}</b><br> = <br><b>${(amount * val.val).toFixed(2)} ${toText}</b>
@@ -302,9 +306,8 @@ function convertCurrency(){
 }
 
 
-// array generators using map & arrow function
-function objectToArray(objects) {
-	// body...
+// Mapping Objects into an Array using Map
+const objectToArray = objects => {
 	const results = Object.keys(objects).map(i => objects[i]);
 	return results;
 }

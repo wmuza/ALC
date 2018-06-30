@@ -53,14 +53,25 @@
 					</div>
 
 					<div class="container-fluid-form-btn p-t-10">
-						<label for="convert-btn"></label>
 						<button class="login-form-btn" id="convert-btn">
 							Convert
 						</button>
 					</div>
 					
-					<!-- notification section -->
-					<div class="notify"></div>
+					<!-- notification section -->										
+					<div class="row" id="alert" style="display: none;">
+						<div class="alert alert-primary" role="alert">
+						  <strong id="alert-message">New version available</strong>
+						  <div>
+							<button id="refresh" name="refresh" type="button" aria-label="Refresh" class="btn btn-outline-primary">
+							  Refresh
+							</button>
+							<button id="dismiss" name="dismiss" type="button" aria-label="Dismiss" class="btn btn-outline-secondary">
+							  Dismiss
+							</button>
+						  </div>
+						</div>
+					</div>
 					
 				</form>
 			</div>
