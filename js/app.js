@@ -7,7 +7,7 @@
 'use strict';
 
 $(document).ready( () => { 
-	let registerServiceWorker = new MainController();	
+	const registerServiceWorker = new MainController();	
 });
 
 /*
@@ -26,7 +26,7 @@ class MainController {
     navigator.serviceWorker.register('/ALC/sw.js').then( sw => {
 	  
 	  // Notify on the console
-      console.log('ServiceWorker successful with scope: ', sw.scope);
+      //console.log('ServiceWorker successful with scope: ', sw.scope);
       
 	  // check service worker controller
 	  if (!navigator.serviceWorker.controller) {
@@ -54,7 +54,7 @@ class MainController {
 	  let refresh;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (refresh) return;
-        //window.location.reload();
+        window.location.reload();
         refresh = true;
       });
     });
@@ -73,16 +73,14 @@ class MainController {
 
   static updateReady(worker) {
     MainController.showAlert('New version available');
-
-	$("#refresh").click( () => worker.postMessage({ action: 'skipWaiting' }) );
-	$("#dismiss").click( () => $("#alert").hide() );
+	$("#refresh").click( () => worker.postMessage({ action: 'skipWaiting' }) );	
   }
 
   // update-only notification alert
   static showAlert(message) {
 	$("#alert").css('display','block');
-    $("#alert-message").innerHTML(message);
-	console.log(message);
+    $("#alert-message").innerHTML(message
+	$("#dismiss").click( () => $("#alert").fadeOut() );
   }
 }
 
