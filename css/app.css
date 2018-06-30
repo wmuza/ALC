@@ -146,6 +146,7 @@ iframe {
 }
 div#alert {
     width: 100%;
+	margin: 19px 0 0;
 }
 #alert .alert div {
     margin-top: 6px;

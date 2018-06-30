@@ -54,7 +54,7 @@ class MainController {
 	  let refresh;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (refresh) return;
-        window.location.reload();
+        //window.location.reload();
         refresh = true;
       });
     });
@@ -80,7 +80,7 @@ class MainController {
 
   // update-only notification alert
   static showAlert(message) {
-	$("#alert").show();
+	$("#alert").css('display','block');
     $("#alert-message").innerHTML(message);
 	console.log(message);
   }
