@@ -79,7 +79,7 @@ class MainController {
   // update-only notification alert
   static showAlert(message) {
 	$("#alert").css('display','block');
-    $("#alert-message").innerHTML(message
+    $("#alert-message").innerHTML(message);
 	$("#dismiss").click( () => $("#alert").fadeOut() );
   }
 }
