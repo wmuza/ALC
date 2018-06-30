@@ -10,7 +10,7 @@ This application is hosted on using Github page [visit here](https://wmuza.githu
 ### Mobile Web Specialist Track ###
 
 Currency Converter powered by Freecurrencyconverterapi is a progressive web application that convert currencies from one country to another.
-This app allows converting currencies in both offline and online mode and its fast and easy to use. Please note that the application code is written in Javascript CS6.
+This app allows converting currencies in both offline and online mode and its fast and easy to use. Please note that the application code is written in Javascript ES6.
 
 
 ### Prerequisites: ###
