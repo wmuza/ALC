@@ -167,7 +167,7 @@ div#alert {
 }
 
 .body-container {
-  background-image: url(../img/background-image.jpg);
+  background-image: url(../img/background-image-min.jpg);
   width: 100%;  
   min-height: 100vh;
   display: -webkit-box;
