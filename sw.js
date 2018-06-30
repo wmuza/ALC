@@ -6,8 +6,8 @@
 */
 
 // registering service worker cache 
-var appCacheName = 'wnes-static-v2';
-var appCacheAssets = [
+let appCacheName = 'wnes-static-v2';
+let appCacheAssets = [
 	  'https://wmuza.github.io/ALC/',
 	  'https://wmuza.github.io/ALC/index.html',
 	  'https://wmuza.github.io/ALC/css/app.css',
@@ -22,33 +22,33 @@ var appCacheAssets = [
 
 
 // on install state
-self.addEventListener('install', function(event){
+self.addEventListener('install', event => {
 	event.waitUntil(
-		caches.open(appCacheName).then(function(cache){
+		caches.open(appCacheName).then( cache => {
 			return cache.addAll(appCacheAssets);
 		})
 	);
 });
 
 // on activate state
-self.addEventListener('activate', function(event){
+self.addEventListener('activate', event =>{
 	event.waitUntil(
-		caches.keys().then(function(cacheNames){
+		caches.keys().then( cacheNames => {
 			return Promise.all(
-				cacheNames.filter(function(cacheName){
-					return cacheName.startsWith('wnes-') && cacheName !== appCacheName;
-				}).map(function(cacheName){
-					return caches.delete(cacheName);
-				})
+				cacheNames.filter( 
+					cacheName => cacheName.startsWith('wnes-') && cacheName !== appCacheName
+				).map( 
+					cacheName => return caches.delete(cacheName)
+				)
 			);
 		})
 	);
 });
 
 // on fetch state
-self.addEventListener('fetch', function(event){
+self.addEventListener('fetch', event => {
 	event.respondWith(
-		caches.match(event.request).then(function(response){
+		caches.match(event.request).then( response => {
 			if(response){
 				return response;
 			}
@@ -58,7 +58,7 @@ self.addEventListener('fetch', function(event){
 });
 
 // on message
-self.addEventListener('message', function(event){
+self.addEventListener('message', event => {
 	if(event.data.action == 'skipWaiting'){
 		self.skipWaiting();
 	}
