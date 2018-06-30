@@ -38,7 +38,7 @@ self.addEventListener('activate', event =>{
 				cacheNames.filter( 
 					cacheName => cacheName.startsWith('wnes-') && cacheName !== appCacheName
 				).map( 
-					cacheName => return caches.delete(cacheName)
+					cacheName => caches.delete(cacheName)
 				)
 			);
 		})
